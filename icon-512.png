@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <defs>
+    <radialGradient id="bg">
+      <stop offset="0%" stop-color="#292017"/>
+      <stop offset="100%" stop-color="#070707"/>
+    </radialGradient>
+    <radialGradient id="orb">
+      <stop offset="0%" stop-color="#fff0c2"/>
+      <stop offset="35%" stop-color="#e9a94d"/>
+      <stop offset="75%" stop-color="#a85b16"/>
+      <stop offset="100%" stop-color="#351707"/>
+    </radialGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="16"/>
+    </filter>
+  </defs>
+
+  <rect width="512" height="512" rx="110" fill="url(#bg)"/>
+  <circle cx="256" cy="235" r="105" fill="#e99b38" opacity=".35" filter="url(#glow)"/>
+  <circle cx="256" cy="235" r="78" fill="url(#orb)"/>
+  <circle cx="230" cy="207" r="22" fill="#fff4d9" opacity=".75"/>
+  <text x="256" y="390" text-anchor="middle"
+        font-family="Arial,sans-serif" font-size="58"
+        font-weight="bold" letter-spacing="9" fill="#f2d5a3">EMBER</text>
+  <text x="256" y="425" text-anchor="middle"
+        font-family="Arial,sans-serif" font-size="17"
+        letter-spacing="7" fill="#b78b56">AI</text>
+</svg>
