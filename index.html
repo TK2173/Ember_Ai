@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b0806">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="EMBER AI">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>EMBER AI</title>
+<style>
+:root{color-scheme:dark;--bg:#0b0806;--panel:#17100c;--amber:#e99a58;--gold:#ffd09a;--muted:#aa9582}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% 27%,#2c190f 0%,#100b08 48%,#090706 100%);color:#f8eee5;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;min-height:100vh}
+header{height:62px;display:flex;align-items:center;justify-content:space-between;padding:0 20px;border-bottom:1px solid #ffffff12;background:#0b0806aa;backdrop-filter:blur(18px);position:sticky;top:0;z-index:3}
+.brand{font-size:14px;letter-spacing:3px;font-weight:700;color:#f4c18e}.beta{font-size:9px;letter-spacing:1px;color:#bc8b62;border:1px solid #a9683b66;border-radius:20px;padding:4px 7px;margin-left:7px}
+button{font:inherit;color:inherit;cursor:pointer}header button,.plain{border:0;background:transparent;color:#c9b29d;padding:9px;border-radius:10px}
+main{max-width:850px;margin:auto;min-height:calc(100dvh - 62px);padding:18px 18px 20px;display:flex;flex-direction:column}
+.hero{flex:1;min-height:380px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.orb{width:142px;height:142px;border-radius:50%;position:relative;background:radial-gradient(circle at 30% 23%,#fff2d9,#f6bd80 12%,#e88a42 35%,#873a17 70%,#210c04 95%);box-shadow:0 0 35px #e98c4d88,0 0 95px #bd612f44,inset -15px -17px 27px #290d04;animation:float 5s ease-in-out infinite;margin-bottom:35px}
+.orb:before{content:"";position:absolute;inset:15px -15px;border:1px solid #f9bd7a99;border-radius:50%;transform:rotate(-25deg) scaleY(.43)}
+@keyframes float{50%{transform:translateY(-8px) scale(1.025)}}
+.kicker{font-size:10px;letter-spacing:4px;color:#dca16d;margin-bottom:12px}
+h1{font-size:clamp(36px,8vw,54px);margin:0;font-weight:650;letter-spacing:-1.8px;background:linear-gradient(100deg,#ffe2bd,#efa35e,#b96534);background-clip:text;color:transparent}
+.sub{font-size:14px;color:#b7a18e;margin-top:13px}
+.composer{width:100%;background:linear-gradient(145deg,#261910e8,#120d09f2);border:1px solid #c7834b66;border-radius:20px;padding:9px;display:flex;gap:8px;align-items:end;box-shadow:0 12px 35px #0008}
+textarea{flex:1;min-width:0;resize:none;outline:none;border:0;background:transparent;color:white;font:15px/1.45 inherit;padding:12px 8px;max-height:130px}
+.send{width:42px;height:42px;border:0;border-radius:50%;background:linear-gradient(145deg,#ffd09a,#d98243);color:#261307;font-size:20px;font-weight:700}
+.tools{display:flex;justify-content:center;flex-wrap:wrap;gap:8px 20px;padding:17px 4px 0}
+.tool{background:transparent;border:0;color:#b6a08b;font-size:12px;padding:5px 2px}
+.tool.active{color:#ffd09a}
+.status{text-align:center;font-size:10px;color:#79695b;margin-top:14px}
+.messages{display:none;flex:1;min-height:380px;overflow:auto;flex-direction:column;gap:12px;padding:25px 0}
+.bubble{max-width:88%;padding:13px 15px;border-radius:15px;font-size:14px;line-height:1.55;white-space:pre-wrap;overflow-wrap:anywhere}
+.user{align-self:flex-end;background:#382317;border:1px solid #d58a5144}.ai{align-self:flex-start;background:#1b130e;border:1px solid #ffffff12}
+.panel{display:none;position:fixed;inset:62px 0 0;background:#090706f5;z-index:2;padding:18px;overflow:auto}
+.panel.open{display:block}.panel-inner{max-width:700px;margin:auto}.history-item{display:block;width:100%;text-align:left;background:#17100c;border:1px solid #ffffff12;border-radius:12px;padding:13px;margin:8px 0;color:#e8d6c5}
+.panel-top{display:flex;justify-content:space-between;align-items:center;color:#e9b17b;font-size:12px;letter-spacing:2px}
+@media(min-width:700px){main{padding-top:24px}.hero{min-height:440px}}
+</style>
+</head>
+<body>
+<header>
+ <button id="historyBtn" aria-label="История">☰</button>
+ <div class="brand">✦ EMBER <span class="beta">BETA</span></div>
+ <button id="installBtn" hidden>Установить</button>
+</header>
+<div class="panel" id="historyPanel"><div class="panel-inner"><div class="panel-top"><span>ИСТОРИЯ ДИАЛОГОВ</span><button class="plain" id="closeHistory">Закрыть ✕</button></div><button class="history-item" id="newChat">＋ Новый чат</button><div id="historyList"></div></div></div>
+<main>
+ <section class="hero" id="hero"><div class="orb"></div><div class="kicker">INTELLIGENCE. WITHOUT LIMITS.</div><h1>EMBER AI</h1><div class="sub">О чём будем думать сегодня?</div></section>
+ <section class="messages" id="messages"></section>
+ <div>
+  <div class="composer"><button class="plain" id="attachBtn" aria-label="Прикрепить файл">＋</button><textarea id="prompt" rows="1" placeholder="Спроси что угодно..."></textarea><button class="send" id="sendBtn" aria-label="Отправить">↑</button></div>
+  <input type="file" id="fileInput" hidden>
+  <div class="tools">
+   <button class="tool" data-mode="Поиск">⌕ Поиск</button><button class="tool" data-mode="Фото">▧ Фото</button><button class="tool" data-mode="Голос">♩ Голос</button><button class="tool" data-mode="Файлы">▱ Файлы</button><button class="tool" data-mode="Deep Think">◈ Deep Think</button>
+  </div>
+  <div class="status" id="status">Бета-версия · демонстрационные ответы</div>
+ </div>
+</main>
+<script>
+(()=> {
+const $=id=>document.getElementById(id);let mode="",file=null,threads=[],current=null;
+try{threads=JSON.parse(localStorage.getItem("ember_threads")||"[]")}catch(e){threads=[]}
+function save(){localStorage.setItem("ember_threads",JSON.stringify(threads))}
+function showHistory(){ $("historyPanel").classList.add("open");renderHistory()}
+function renderHistory(){const list=$("historyList");list.innerHTML="";threads.forEach((t,i)=>{const b=document.createElement("button");b.className="history-item";b.textContent=t.title||"Новый чат";b.onclick=()=>openThread(i);list.append(b)})}
+function bubble(type,text){const d=document.createElement("div");d.className="bubble "+type;d.textContent=text;$("messages").append(d);$("messages").scrollTop=$("messages").scrollHeight}
+function showChat(){ $("hero").style.display="none";$("messages").style.display="flex"}
+function openThread(i){current=threads[i];$("messages").innerHTML="";showChat();current.items.forEach(m=>bubble(m.type,m.text));$("historyPanel").classList.remove("open")}
+function newChat(){current=null;$("messages").innerHTML="";$("messages").style.display="none";$("hero").style.display="flex";$("historyPanel").classList.remove("open");$("prompt").focus()}
+function answer(q){if(mode==="Поиск")return "Режим поиска выбран. Настоящий интернет-поиск появится после подключения серверного модуля.";if(mode==="Фото"||file)return "Файл выбран. Анализ изображений станет доступен после подключения ИИ-модели.";if(mode==="Файлы")return "Обработка документов пока демонстрационная.";if(mode==="Голос")return "Голосовой режим пока не подключён.";if(mode==="Deep Think")return "Deep Think выбран. Настоящее глубокое рассуждение появится после подключения модели.";if(/привет|здравств/i.test(q))return "Привет! Я EMBER AI. Сейчас это демонстрационная бета-версия интерфейса.";return "Я получил твой запрос. Для полноценных ответов нужно подключить ИИ-модель через защищённый сервер."}
+function send(){const q=$("prompt").value.trim();if(!q&&!file)return;if(!current){current={title:(q||file.name).slice(0,35),items:[]};threads.unshift(current)}const txt=q||( "Прикреплён файл: "+file.name);current.items.push({type:"user",text:txt});showChat();$("messages").innerHTML="";current.items.forEach(m=>bubble(m.type,m.text));$("prompt").value="";const a=answer(q);file=null;mode="";document.querySelectorAll(".tool").forEach(b=>b.classList.remove("active"));$("status").textContent="Бета-версия · демонстрационные ответы";save();setTimeout(()=>{current.items.push({type:"ai",text:a});bubble("ai",a);save();renderHistory()},300)}
+$("historyBtn").onclick=showHistory;$("closeHistory").onclick=()=>$("historyPanel").classList.remove("open");$("newChat").onclick=newChat;$("sendBtn").onclick=send;$("prompt").addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();send()}});
+$("attachBtn").onclick=()=>$("fileInput").click();$("fileInput").onchange=e=>{file=e.target.files[0];if(file)$("status").textContent="Выбран файл: "+file.name};
+document.querySelectorAll(".tool").forEach(b=>b.onclick=()=>{mode=mode===b.dataset.mode?"":b.dataset.mode;document.querySelectorAll(".tool").forEach(x=>x.classList.toggle("active",x===b&&!!mode));$("status").textContent=mode?"Режим "+mode+" включён":"Бета-версия · демонстрационные ответы"});
+renderHistory();
+let deferredPrompt=null;window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredPrompt=e;$("installBtn").hidden=false});$("installBtn").onclick=async()=>{if(deferredPrompt){deferredPrompt.prompt();deferredPrompt=null}else alert("На iPhone/iPad: нажми «Поделиться» в Safari, затем «На экран Домой».")};
+if("serviceWorker" in navigator && location.protocol.startsWith("http"))navigator.serviceWorker.register("./sw.js").catch(()=>{});
+})();
+</script>
+</body>
+</html>
