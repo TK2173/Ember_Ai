@@ -559,6 +559,184 @@ textarea::placeholder {
   opacity: 1;
 }
 
+/* SUBSCRIPTIONS */
+
+.subscription-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(5,4,3,.82);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.subscription-overlay.open {
+  display: flex;
+}
+
+.subscription-panel {
+  position: relative;
+  width: min(100%, 950px);
+  max-height: 92dvh;
+  overflow-y: auto;
+  padding: clamp(22px,4vw,38px);
+  border: 1px solid rgba(239,180,119,.22);
+  border-radius: 26px;
+  background:
+    radial-gradient(ellipse at 50% 0%,rgba(150,77,35,.2),transparent 55%),
+    #17110e;
+  box-shadow: 0 30px 100px rgba(0,0,0,.65);
+  animation: subscriptionIn .25s ease both;
+}
+
+@keyframes subscriptionIn {
+  from { opacity: 0; transform: translateY(12px) scale(.985); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.subscription-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  font-size: 23px;
+}
+
+.subscription-kicker {
+  color: var(--gold);
+  font-size: 10px;
+  letter-spacing: 2.5px;
+}
+
+.subscription-title {
+  margin: 12px 40px 8px 0;
+  font-size: clamp(26px,5vw,38px);
+  font-weight: 550;
+}
+
+.subscription-subtitle {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.subscription-grid {
+  display: grid;
+  grid-template-columns: repeat(3,minmax(0,1fr));
+  gap: 14px;
+  margin-top: 26px;
+}
+
+.subscription-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 21px;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: linear-gradient(145deg,#241a13,#17110e);
+}
+
+.subscription-card.premium {
+  border-color: rgba(233,164,93,.4);
+  box-shadow: inset 0 1px rgba(233,164,93,.08);
+}
+
+.subscription-card.ultra {
+  border-color: rgba(186,117,196,.4);
+  background: linear-gradient(145deg,#241827,#17110e);
+  box-shadow: inset 0 1px rgba(186,117,196,.08);
+}
+
+.subscription-plan {
+  color: var(--gold-light);
+  font-size: 11px;
+  letter-spacing: 2px;
+  font-weight: 700;
+}
+
+.subscription-card.ultra .subscription-plan {
+  color: #d6a5e9;
+}
+
+.subscription-price {
+  margin: 13px 0 3px;
+  font-size: clamp(25px,3vw,34px);
+  font-weight: 700;
+  letter-spacing: -.7px;
+}
+
+.subscription-period {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.subscription-features {
+  flex: 1;
+  margin: 20px 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 12px;
+  color: #d9c9bb;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.subscription-features li::before {
+  content: "✦";
+  color: var(--gold);
+  margin-right: 8px;
+}
+
+.subscription-card.ultra .subscription-features li::before {
+  color: #c78fe1;
+}
+
+.subscription-buy {
+  width: 100%;
+  min-height: 44px;
+  border: 1px solid rgba(233,164,93,.25);
+  border-radius: 13px;
+  background: rgba(233,164,93,.09);
+  color: var(--gold-light);
+  font-weight: 650;
+  opacity: .8;
+  cursor: default;
+}
+
+.subscription-card.ultra .subscription-buy {
+  border-color: rgba(186,117,196,.3);
+  background: rgba(151,91,174,.12);
+  color: #dfb8ed;
+}
+
+.subscription-current {
+  margin-top: 18px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  background: rgba(255,255,255,.025);
+  color: var(--muted);
+  font-size: 12px;
+  text-align: center;
+}
+
+.subscription-current strong {
+  color: var(--gold-light);
+}
+
+.subscription-note {
+  margin-top: 18px;
+  color: #89796c;
+  font-size: 11px;
+  line-height: 1.5;
+  text-align: center;
+}
+
 /* TABLET: iPad portrait and landscape */
 @media (min-width: 700px) and (max-width: 1200px) {
   .app {
@@ -802,6 +980,32 @@ textarea::placeholder {
   .disclaimer {
     font-size: 9px;
   }
+
+  .subscription-overlay {
+    align-items: flex-end;
+    padding: 8px;
+  }
+
+  .subscription-panel {
+    max-height: 94dvh;
+    padding: 24px 16px calc(20px + env(safe-area-inset-bottom));
+    border-radius: 23px;
+  }
+
+  .subscription-grid {
+    grid-template-columns: 1fr;
+    gap: 11px;
+    margin-top: 18px;
+  }
+
+  .subscription-card {
+    padding: 18px;
+  }
+
+  .subscription-features {
+    margin: 14px 0;
+    gap: 8px;
+  }
 }
 
 /* Small phone landscape / short viewport */
@@ -851,6 +1055,8 @@ textarea::placeholder {
 
     <div class="top-actions">
       <span class="status">AI ASSISTANT</span>
+      <button class="icon-button" id="subscriptionOpen"
+        aria-label="Подписка" title="Подписка">✧</button>
       <button class="icon-button mobile-history" id="historyToggle" aria-label="История">☷</button>
       <button class="icon-button" id="newChatTop" aria-label="Новый диалог">＋</button>
     </div>
@@ -906,6 +1112,94 @@ textarea::placeholder {
   </div>
 </div>
 
+<!-- SUBSCRIPTION WINDOW -->
+<div class="subscription-overlay" id="subscriptionOverlay" aria-hidden="true">
+  <section class="subscription-panel" role="dialog"
+    aria-modal="true" aria-labelledby="subscriptionTitle">
+
+    <button class="icon-button subscription-close" id="subscriptionClose"
+      aria-label="Закрыть">×</button>
+
+    <div class="subscription-kicker">EMBER MEMBERSHIP</div>
+
+    <h2 class="subscription-title" id="subscriptionTitle">
+      Выбери свой уровень
+    </h2>
+
+    <p class="subscription-subtitle">
+      Открой больше возможностей искусственного интеллекта.
+      Выбери тариф, который подходит именно тебе.
+    </p>
+
+    <div class="subscription-grid">
+
+      <article class="subscription-card">
+        <div class="subscription-plan">FREE</div>
+        <div class="subscription-price">0 ₽</div>
+        <div class="subscription-period">Бесплатно</div>
+
+        <ul class="subscription-features">
+          <li>Базовый доступ к EMBER AI</li>
+          <li>Обычные запросы к ИИ</li>
+          <li>История диалогов</li>
+          <li>Базовые инструменты</li>
+        </ul>
+
+        <button class="subscription-buy" disabled>
+          Текущий тариф
+        </button>
+      </article>
+
+      <article class="subscription-card premium">
+        <div class="subscription-plan">PREMIUM</div>
+        <div class="subscription-price">299 ₽</div>
+        <div class="subscription-period">В месяц</div>
+
+        <ul class="subscription-features">
+          <li>Увеличенные лимиты запросов</li>
+          <li>Более длинные диалоги</li>
+          <li>Приоритетная обработка</li>
+          <li>Анализ загружаемых файлов</li>
+          <li>Продвинутые режимы ИИ</li>
+        </ul>
+
+        <button class="subscription-buy" disabled>
+          Скоро
+        </button>
+      </article>
+
+      <article class="subscription-card ultra">
+        <div class="subscription-plan">ULTRA</div>
+        <div class="subscription-price">699 ₽</div>
+        <div class="subscription-period">В месяц</div>
+
+        <ul class="subscription-features">
+          <li>Максимальные доступные лимиты</li>
+          <li>Наивысший приоритет обработки</li>
+          <li>Расширенный анализ документов</li>
+          <li>Работа со сложными задачами</li>
+          <li>Доступ к экспериментальным функциям</li>
+          <li>Все возможности PREMIUM</li>
+        </ul>
+
+        <button class="subscription-buy" disabled>
+          Скоро
+        </button>
+      </article>
+
+    </div>
+
+    <div class="subscription-current">
+      Демонстрационный тариф: <strong>FREE</strong>
+    </div>
+
+    <p class="subscription-note">
+      Цены и возможности предварительные. Покупка и оплата пока не подключены.
+    </p>
+
+  </section>
+</div>
+
 <script>
 (() => {
   "use strict";
@@ -928,6 +1222,36 @@ textarea::placeholder {
   const fileName = $("fileName");
   const historyList = $("historyList");
   const sidebar = $("sidebar");
+
+  // SUBSCRIPTIONS
+  const subscriptionOverlay = $("subscriptionOverlay");
+  const subscriptionOpen = $("subscriptionOpen");
+  const subscriptionClose = $("subscriptionClose");
+
+  function openSubscription() {
+    subscriptionOverlay.classList.add("open");
+    subscriptionOverlay.setAttribute("aria-hidden", "false");
+  }
+
+  function closeSubscription() {
+    subscriptionOverlay.classList.remove("open");
+    subscriptionOverlay.setAttribute("aria-hidden", "true");
+  }
+
+  subscriptionOpen.addEventListener("click", openSubscription);
+  subscriptionClose.addEventListener("click", closeSubscription);
+
+  subscriptionOverlay.addEventListener("click", event => {
+    if (event.target === subscriptionOverlay) {
+      closeSubscription();
+    }
+  });
+
+  document.addEventListener("keydown", event => {
+    if (event.key === "Escape") {
+      closeSubscription();
+    }
+  });
 
   let chats = loadChats();
   let currentChatId = null;
